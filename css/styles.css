@@ -245,6 +245,7 @@ nav h1 a {
   border-bottom: 1px solid #d9d9d9;
   border-top: 1px solid #fff;
   padding: 20px;
+	margin: 0 10px;
   width: 100%;
 }
 #reviews-container {
@@ -263,18 +264,38 @@ nav h1 a {
 }
 #reviews-list li {
   background-color: #fff;
-    border: 2px solid #f3f3f3;
+  border: 2px solid #f3f3f3;
+	border-radius: 10% 0%;
   display: block;
   list-style-type: none;
-  margin: 0 0 30px;
+  margin: 0 10px 30px;
   overflow: hidden;
-  padding: 20px;
-  position: relative;
   width: 85%;
 }
 #reviews-list li p {
   margin: 0 0 10px;
+	padding: 5px 20px;
 }
 #restaurant-hours td {
   color: #666;
+}
+
+/* ====================== Review Details ====================== */
+.review-author{
+	background-color: #252831;
+	color: white;
+	font-size: 2rem;
+	width: 100%;
+}
+.review-date{
+	float: right;
+}
+.review-rating{
+	text-transform: uppercase;
+	width: 70px;
+	background-color: #f58500;
+	color: white;
+}
+.review-comments{
+
 }

@@ -12,6 +12,12 @@ main{
   display: flex;
   flex-direction: column;
 }
+
+@media screen and (min-width: 360px) {
+  #reviews-list li {
+    width: 320px;
+}
+}
 @media screen and (min-width: 444px) {
   .filter-options {
     height: 60px;
