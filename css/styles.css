@@ -66,15 +66,13 @@ nav h1 a {
   text-transform: uppercase;
 }
 #breadcrumb {
-    padding: 0px 40px;
+    padding: 0px 20px;
     list-style: none;
     background-color: #eee;
     font-size: 17px;
     margin: 0;
 		display: flex;
 		align-items: center;
-		/* height: 50px; */
-    /* width: calc(50% - 80px); */
 }
 
 /* Display list items side by side */
@@ -247,9 +245,11 @@ nav h1 a {
   padding: 20px;
 	margin: 0 10px;
   width: 100%;
+	box-sizing: border-box;
 }
 #reviews-container {
   padding: 20px;
+	box-sizing: border-box;
 }
 #reviews-container h2 {
   color: #f58500;
@@ -283,19 +283,23 @@ nav h1 a {
 /* ====================== Review Details ====================== */
 .review-author{
 	background-color: #252831;
-	color: white;
-	font-size: 2rem;
-	width: 100%;
+	color: #fdfdfd;
+	font-size: 1.3rem;
 }
 .review-date{
+	/* display: none; */
 	float: right;
+	font-size: 0.9rem;
+	color: #bbbd;
+	margin-top: 5px;
 }
 .review-rating{
 	text-transform: uppercase;
-	width: 70px;
+	width: 110px;
 	background-color: #f58500;
-	color: white;
+	color: #fdfdfd;
+	font-size: 1rem;
 }
 .review-comments{
-
+	font-size: 0.9rem;
 }
