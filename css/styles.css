@@ -112,9 +112,10 @@ nav h1 a {
 /* ====================== Restaurant Filtering ====================== */
 .filter-options {
   width: 100%;
-  height: 50px;
+  height: 120px;
   background-color: #3397DB;
   align-items: center;
+	padding: 20px;
 }
 .filter-options h2 {
   color: white;
@@ -140,7 +141,7 @@ nav h1 a {
   background-color: #f3f3f3;
   list-style: outside none none;
   margin: 0;
-  padding: 30px 15px 60px;
+  padding: 20px;
   text-align: center;
 }
 #restaurants-list li {
@@ -197,10 +198,7 @@ nav h1 a {
 }
 .inside #map-container {
   background: blue none repeat scroll 0 0;
-  /* height: 87%; */
-  position: relative;
-  right: 0;
-  top: calc(80px + 1rem);
+  margin-top: calc(80px + 70px);
   width: 100%;
 	height: 400px;
 }
@@ -211,7 +209,7 @@ nav h1 a {
 }
 .inside #footer {
   bottom: 0;
-  position: absolute;
+	top: 70px;
   width: 100%;
 }
 #restaurant-name {
@@ -246,11 +244,11 @@ nav h1 a {
 #restaurant-container, #reviews-container {
   border-bottom: 1px solid #d9d9d9;
   border-top: 1px solid #fff;
-  padding: 140px 40px 30px;
+  padding: 20px;
   width: 100%;
 }
 #reviews-container {
-  padding: 30px 40px 80px;
+  padding: 20px;
 }
 #reviews-container h2 {
   color: #f58500;
@@ -270,7 +268,7 @@ nav h1 a {
   list-style-type: none;
   margin: 0 0 30px;
   overflow: hidden;
-  padding: 0 20px 20px;
+  padding: 20px;
   position: relative;
   width: 85%;
 }
