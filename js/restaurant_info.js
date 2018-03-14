@@ -121,6 +121,7 @@ createReviewHTML = (review) => {
   name.innerHTML = review.name;
   name.classList.add('review-author');
 
+  // Date is now a span inside the reviewer's name
   const date = document.createElement('span');
   date.innerHTML = review.date;
   date.classList.add('review-date');
