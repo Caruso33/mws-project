@@ -60,6 +60,15 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
   image.src = DBHelper.imageUrlForRestaurant(restaurant);
   image.alt = restaurant.name;
 
+  // srcset: serving the right img size to the right viewport width
+  const origImg = image.src.slice(0, -4);
+  image.srcset = `${origImg}-250_small.jpg 250w,
+                  ${origImg}-400_medium.jpg 400w,
+                  ${origImg}-600_large.jpg 600w,
+                  ${origImg}-800_orig.jpg 800w
+                  `;
+  image.sizes = `90vw`;
+
   const cuisine = document.getElementById('restaurant-cuisine');
   cuisine.innerHTML = restaurant.cuisine_type;
 
