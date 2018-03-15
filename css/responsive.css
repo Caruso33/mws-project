@@ -14,9 +14,6 @@ main{
 }
 
 @media screen and (min-width: 360px) {
-  #reviews-list li {
-    width: 320px;
-  }
   .review-author{
     font-size: 2rem;
   }
@@ -31,10 +28,21 @@ main{
   .review-comments{
     font-size: 1rem;
   }
+  #reviews-list li {
+    width: 320px;
+  }
+  #restaurant-hours td{
+    margin-right: 10px;
+    width: 140px;
+  }
 }
+
 @media screen and (min-width: 444px) {
   .filter-options {
     height: 60px;
+  }
+  #restaurant-hours td{
+    width: auto;
   }
 }
 @media screen and (min-width: 600px) {
