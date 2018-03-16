@@ -223,10 +223,19 @@ nav h1 a {
 #restaurant-fig{
 	width: 90%;
 	margin: 0 auto;
-	display: block;
+
+	position: relative;
+  align-items: flex-end;
+  display: flex;
 }
 #restaurant-img {
 	max-width: 100%;
+}
+#restaurant-figcap{
+	margin-right: 10px;
+	font-style: italic;
+	transform: rotate(90deg);
+	/* transform-origin: top right; */
 }
 #restaurant-address {
   font-size: 1rem;
