@@ -57,7 +57,7 @@ article, aside, canvas, details, figcaption, figure, footer, header, hgroup, men
 	background: #fdfdfd;
 	text-align: center;
 	box-sizing: border-box;
-	padding:30px;
+	padding:20px;
 	z-index: 1;
 }
 .skiplink:focus{
