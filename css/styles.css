@@ -150,15 +150,14 @@ nav h1 a {
   min-height: 380px;
   padding: 25px 30px;
   text-align: left;
-  width: 270px;
+  width: 300px;
 }
 #restaurants-list .restaurant-img {
   background-color: #ccc;
   display: block;
   margin: 0;
   max-width: 100%;
-  min-height: 248px;
-  min-width: 100%;
+  max-height: 100%;
 }
 #restaurants-list li h1 {
   color: #f18200;
@@ -223,18 +222,22 @@ nav h1 a {
 #restaurant-fig{
 	width: 90%;
 	margin: 0 auto;
-
-	position: relative;
-  align-items: flex-end;
-  display: flex;
+	/* display: flex; */
 }
-#restaurant-img {
+.restaurant-fig{
+	width: 100%;
+	margin: 0 auto;
+}
+#restaurant-img,
+.restaurant-img {
 	max-width: 100%;
 }
-#restaurant-figcap{
+#restaurant-figcap,
+.restaurant-figcap{
 	margin-right: 10px;
 	font-style: italic;
-	transform: rotate(90deg);
+	text-align: right;
+	/* transform: rotate(90deg); */
 	/* transform-origin: top right; */
 }
 #restaurant-address {

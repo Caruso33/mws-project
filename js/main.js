@@ -138,10 +138,28 @@ fillRestaurantsHTML = (restaurants = self.restaurants) => {
 createRestaurantHTML = (restaurant) => {
   const li = document.createElement('li');
 
+  const fig = document.createElement('figure');
   const image = document.createElement('img');
+  const figcap = document.createElement('figcaption');
+
+  fig.className = 'restaurant-fig';
   image.className = 'restaurant-img';
+  figcap.className = 'restaurant-figcap';
+
   image.src = DBHelper.imageUrlForRestaurant(restaurant);
-  li.append(image);
+  image.alt = restaurant.name;
+  figcap.innerHTML = `Restaurant ${restaurant.name}`;
+
+  // srcset: serving the right img size to the right viewport width
+  const origImg = image.src.slice(0, -4);
+  image.srcset = `${origImg}-250_small.jpg 250w,
+                  ${origImg}-400_medium.jpg 400w,
+                  `;
+  image.sizes = `(min-width: 434px) 300px, calc(100% - 137px)`;
+
+  fig.append(image);
+  fig.append(figcap);
+  li.append(fig);
 
   const name = document.createElement('h1');
   name.innerHTML = restaurant.name;
