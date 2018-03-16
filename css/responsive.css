@@ -64,10 +64,9 @@ main{
   }
 }
 @media screen and (min-width: 600px) {
-  /* h1{
-    font-size: 2rem;
-
-  } */
+  nav h1 a{
+    font-size: 16pt;
+  }
   #breadcrumb li {
   		font-size: 1.2rem;
   }
