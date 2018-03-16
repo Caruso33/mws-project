@@ -41,8 +41,26 @@ main{
   .filter-options {
     height: 60px;
   }
+  #breadcrumb li{
+    font-size: 1.1rem;
+  }
+  #restaurant-cuisine{
+    font-size: 14pt;
+  }
+  #restaurant-address{
+    text-align: center;
+    font-size: 1.1rem;
+  }
+  #restaurant-hours{
+    margin: auto;
+  }
   #restaurant-hours td{
-    width: auto;
+    max-width: 160px;
+    width: 160px;
+    font-size: 1rem;
+  }
+  #footer{
+    font-size: 10pt;
   }
 }
 @media screen and (min-width: 600px) {
