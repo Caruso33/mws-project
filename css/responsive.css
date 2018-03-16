@@ -49,6 +49,7 @@ main{
 @media screen and (min-width: 444px) {
   .filter-options {
     height: 60px;
+    }
   }
   .review-author{
     font-size: 1.8rem;
