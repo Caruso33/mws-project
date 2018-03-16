@@ -59,7 +59,7 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
   const figcap = document.getElementById('restaurant-figcap');
   image.className = 'restaurant-img'
   image.src = DBHelper.imageUrlForRestaurant(restaurant);
-  image.alt = restaurant.name;
+  image.alt = `An impression of restaurant ${restaurant.name}`;
   figcap.innerHTML = `Restaurant ${restaurant.name}`;
 
   // srcset: serving the right img size to the right viewport width
