@@ -80,6 +80,11 @@ window.initMap = () => {
     center: loc,
     scrollwheel: false
   });
+  const idleListener = google.maps.event.addListenerOnce(self.map, 'idle', () => {
+    let iframe = document.querySelector("iframe");
+    iframe.setAttribute("aria-hidden", "true");
+    iframe.setAttribute("tabindex", "-1");
+  });
   updateRestaurants();
 }
 
