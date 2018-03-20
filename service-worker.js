@@ -49,7 +49,6 @@ self.addEventListener('activate', event => {
 });
 
 self.addEventListener('fetch', event => {
-  const googleMapsApi = 'https://maps.googleapis.com';
 
   event.respondWith(
     caches.match(event.request).then(response => {
