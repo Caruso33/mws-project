@@ -50,27 +50,23 @@ self.addEventListener('activate', event => {
 
 self.addEventListener('fetch', event => {
   const googleMapsApi = 'https://maps.googleapis.com';
-  // if (event.request.url.startsWith(googleMapsApi)) {
 
-    event.respondWith(
-      caches.match(event.request).then(response => {
-        if(response) {
-          console.log('ServiceWorker fetches from cache', event.request.url);
-          return response || fetch(event.request);
-        }
-        fetch(event.request).then(response => {
-          if(!response) {
-            console.log('ServiceWorker has no response from fetch');
-            return response;
-          }
-          return caches.open(dataCacheName).then(cache => {
-            cache.put(event.request.url, response.clone());
-            console.log('ServiceWorker fetched & cached', event.request.url);
-            return response;
-          });
-        })
-        .catch(err => console.log('Fetching failed', err));
+  event.respondWith(
+    caches.match(event.request).then(response => {
+      if(response) { console.log('ServiceWorker fetches from cache', event.request.url); }
+
+      return response || fetch(event.request).then(response => {
+        if(!response) { console.log('ServiceWorker has no response from fetch', event.request.url); }
+
+        return caches.open(dataCacheName).then(cache => {
+          cache.put(event.request.url, response.clone());
+          console.log('ServiceWorker fetched & cached', event.request.url);
+
+          return response;
+        });
       })
-    );
-  // }
+      .catch(err => console.log('ServiceWorker fetching failed', err));
+    })
+    .catch(err => console.log('ServiceWorker cache matching failed', err))
+  );
 });
