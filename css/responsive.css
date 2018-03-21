@@ -74,6 +74,9 @@ main{
   #footer{
     font-size: 10pt;
   }
+  .inside #map-container {
+    margin-top: calc(80px + 66px);
+  }
 }
 @media screen and (min-width: 459px) {
   .filter-options {
@@ -86,5 +89,8 @@ main{
   }
   #breadcrumb li {
   		font-size: 1.2rem;
+  }
+  .inside #map-container {
+    margin-top: calc(80px + 68px);
   }
 }
