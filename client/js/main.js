@@ -1,13 +1,12 @@
-let restaurants,
-  neighborhoods,
-  cuisines
-var map
-var markers = []
+let restaurants, neighborhoods, cuisines;
+var map;
+var markers = [];
+const logging = false;
 
 /**
  * Fetch neighborhoods and cuisines as soon as the page is loaded.
  */
-document.addEventListener('DOMContentLoaded', (event) => {
+document.addEventListener('DOMContentLoaded', event => {
   serviceWorker();
   fetchNeighborhoods();
   fetchCuisines();
@@ -17,15 +16,22 @@ document.addEventListener('DOMContentLoaded', (event) => {
  * Fetch all neighborhoods and set their HTML.
  */
 fetchNeighborhoods = () => {
-  DBHelper.fetchNeighborhoods((error, neighborhoods) => {
-    if (error) { // Got an error
-      console.error(error);
+  window.localforage.getItem('restaurantData', function(err, restaurantList) {
+    if (restaurantList) {
+      self.restaurantList = restaurantList;
     } else {
-      self.neighborhoods = neighborhoods;
-      fillNeighborhoodsHTML();
+      DBHelper.fetchNeighborhoods((error, neighborhoods) => {
+        if (error) {
+          // Got an error
+          console.error(error);
+        } else {
+          self.neighborhoods = neighborhoods;
+          fillNeighborhoodsHTML();
+        }
+      });
     }
   });
-}
+};
 
 /**
  * Set neighborhoods HTML.
@@ -38,21 +44,22 @@ fillNeighborhoodsHTML = (neighborhoods = self.neighborhoods) => {
     option.value = neighborhood;
     select.append(option);
   });
-}
+};
 
 /**
  * Fetch all cuisines and set their HTML.
  */
 fetchCuisines = () => {
   DBHelper.fetchCuisines((error, cuisines) => {
-    if (error) { // Got an error!
+    if (error) {
+      // Got an error!
       console.error(error);
     } else {
       self.cuisines = cuisines;
       fillCuisinesHTML();
     }
   });
-}
+};
 
 /**
  * Set cuisines HTML.
@@ -66,7 +73,7 @@ fillCuisinesHTML = (cuisines = self.cuisines) => {
     option.value = cuisine;
     select.append(option);
   });
-}
+};
 
 /**
  * Initialize Google map, called from HTML.
@@ -81,13 +88,17 @@ window.initMap = () => {
     center: loc,
     scrollwheel: false
   });
-  const idleListener = google.maps.event.addListenerOnce(self.map, 'idle', () => {
-    let iframe = document.querySelector("iframe");
-    iframe.setAttribute("aria-hidden", "true");
-    iframe.setAttribute("tabindex", "-1");
-  });
+  const idleListener = google.maps.event.addListenerOnce(
+    self.map,
+    'idle',
+    () => {
+      let iframe = document.querySelector('iframe');
+      iframe.setAttribute('aria-hidden', 'true');
+      iframe.setAttribute('tabindex', '-1');
+    }
+  );
   updateRestaurants();
-}
+};
 
 /**
  * Update page and map for current restaurants.
@@ -102,20 +113,25 @@ updateRestaurants = () => {
   const cuisine = cSelect[cIndex].value;
   const neighborhood = nSelect[nIndex].value;
 
-  DBHelper.fetchRestaurantByCuisineAndNeighborhood(cuisine, neighborhood, (error, restaurants) => {
-    if (error) { // Got an error!
-      console.error(error);
-    } else {
-      resetRestaurants(restaurants);
-      fillRestaurantsHTML();
+  DBHelper.fetchRestaurantByCuisineAndNeighborhood(
+    cuisine,
+    neighborhood,
+    (error, restaurants) => {
+      if (error) {
+        // Got an error!
+        console.error(error);
+      } else {
+        resetRestaurants(restaurants);
+        fillRestaurantsHTML();
+      }
     }
-  })
-}
+  );
+};
 
 /**
  * Clear current restaurants, their HTML and remove their map markers.
  */
-resetRestaurants = (restaurants) => {
+resetRestaurants = restaurants => {
   // Remove all restaurants
   self.restaurants = [];
   const ul = document.getElementById('restaurants-list');
@@ -125,7 +141,7 @@ resetRestaurants = (restaurants) => {
   self.markers.forEach(m => m.setMap(null));
   self.markers = [];
   self.restaurants = restaurants;
-}
+};
 
 /**
  * Create all restaurants HTML and add them to the webpage.
@@ -136,12 +152,12 @@ fillRestaurantsHTML = (restaurants = self.restaurants) => {
     ul.append(createRestaurantHTML(restaurant));
   });
   addMarkersToMap();
-}
+};
 
 /**
  * Create restaurant HTML.
  */
-createRestaurantHTML = (restaurant) => {
+createRestaurantHTML = restaurant => {
   const li = document.createElement('li');
 
   const fig = document.createElement('figure');
@@ -182,13 +198,16 @@ createRestaurantHTML = (restaurant) => {
   const more = document.createElement('a');
   more.innerHTML = 'View Details';
   more.href = DBHelper.urlForRestaurant(restaurant);
-  more.setAttribute("role", "button");
-  more.setAttribute("aria-label", `Press to view details of restaurant ${restaurant.name}`);
+  more.setAttribute('role', 'button');
+  more.setAttribute(
+    'aria-label',
+    `Press to view details of restaurant ${restaurant.name}`
+  );
 
-  li.append(more)
+  li.append(more);
 
-  return li
-}
+  return li;
+};
 
 /**
  * Add markers for current restaurants to the map.
@@ -198,20 +217,31 @@ addMarkersToMap = (restaurants = self.restaurants) => {
     // Add marker to the map
     const marker = DBHelper.mapMarkerForRestaurant(restaurant, self.map);
     google.maps.event.addListener(marker, 'click', () => {
-      window.location.href = marker.url
+      window.location.href = marker.url;
     });
     self.markers.push(marker);
   });
-}
+};
 
 /**
  * Add service-worker
  */
- function serviceWorker(){
-  if(!navigator.serviceWorker) return;
+function serviceWorker() {
+  if (!navigator.serviceWorker) return;
 
   navigator.serviceWorker
     .register('/service-worker.js', { scope: '/' })
-    .then(reg => console.log('Service Worker registered'))
-    .catch(err => console.log('Service Worker registration failed!', err));
+    .then(reg => {
+      if (logging) console.log('[ServiceWorker] registered');
+      // if (reg.waiting) {
+      //   console.log('[ServiceWorker] updated version is ready to be installed');
+      // }
+      // if (reg.installing) {
+      //   console.log('[ServiceWorker] updated version is installing');
+      // }
+      // reg.addEventListener('updatefound', function(e) {
+      //   console.log('[ServiceWorker] new ServiceWorker arrival');
+      // });
+    })
+    .catch(err => console.log('[ServiceWorker] registration failed!', err));
 }
