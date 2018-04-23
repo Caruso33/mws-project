@@ -15,9 +15,16 @@ class DBHelper {
    * Fetch all restaurants.
    */
   static async fetchRestaurants(callback) {
+    window.localforage.getItem('restaurantsJson', (err, restaurants) => {
+      if (restaurants) {
+        return callback(null, restaurants);
+      }
+    });
     try {
       const response = await fetch(DBHelper.DATABASE_URL);
-      callback(null, await response.json());
+      const responseJson = await response.json();
+      callback(null, responseJson);
+      window.localforage.setItem('restaurantsJson', responseJson);
     } catch (e) {
       callback(e.message, null);
     }

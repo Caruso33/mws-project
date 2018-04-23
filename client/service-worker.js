@@ -1,6 +1,5 @@
 const shellCacheName = 'restaurantReviews-v1';
 const dataCacheName = 'restaurantReviewsData-v1';
-const jsonIndexDB = 'restaurantJsonRequests-v1';
 const logging = false;
 
 const filesToCache = [
@@ -11,18 +10,7 @@ const filesToCache = [
   '/js/dbhelper.js',
   '/js/restaurant_info.js',
   '/css/styles.css',
-  '/css/responsive.css',
-  '/data/restaurants.json',
-  '/img/10.jpg',
-  '/img/1.jpg',
-  '/img/2.jpg',
-  '/img/3.jpg',
-  '/img/4.jpg',
-  '/img/5.jpg',
-  '/img/6.jpg',
-  '/img/7.jpg',
-  '/img/8.jpg',
-  '/img/9.jpg'
+  '/css/responsive.css'
 ];
 
 self.addEventListener('install', event => {
@@ -78,7 +66,6 @@ self.addEventListener('fetch', event => {
                     event.request.url
                   );
               }
-
               return caches.open(dataCacheName).then(cache => {
                 cache.put(event.request.url, response.clone());
                 if (logging)
