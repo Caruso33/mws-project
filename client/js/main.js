@@ -175,8 +175,7 @@ createRestaurantHTML = restaurant => {
   // srcset: serving the right img size to the right viewport width
   const origImg = image.src.slice(0, -4);
   image.srcset = `${origImg}-250_small.jpg 250w,
-                  ${origImg}-400_medium.jpg 400w,
-                  `;
+                  ${origImg}-400_medium.jpg 400w`;
   image.sizes = `(min-width: 434px) 300px, calc(100% - 137px)`;
 
   fig.append(image);

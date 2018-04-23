@@ -1,5 +1,6 @@
 const shellCacheName = 'restaurantReviews-v1';
 const dataCacheName = 'restaurantReviewsData-v1';
+const jsonIndexDB = 'restaurantJsonRequests-v1';
 const logging = false;
 
 const filesToCache = [
