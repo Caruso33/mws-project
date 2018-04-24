@@ -152,6 +152,7 @@ fillRestaurantsHTML = (restaurants = self.restaurants) => {
     ul.append(createRestaurantHTML(restaurant));
   });
   addMarkersToMap();
+  lazyLoadImages();
 };
 
 /**
@@ -173,8 +174,9 @@ createRestaurantHTML = restaurant => {
   figcap.innerHTML = `Restaurant ${restaurant.name}`;
 
   // srcset: serving the right img size to the right viewport width
-  const origImg = image.src.slice(0, -5);
-  image.srcset = `${origImg}-250_small-min.webp 250w,
+  const origImg = image.src.slice(0, -16);
+  image['data-src'] = `${origImg}.webp`;
+  image['data-srcset'] = `${origImg}-250_small-min.webp 250w,
                   ${origImg}-400_medium-min.webp 400w`;
   image.sizes = `(min-width: 434px) 300px, calc(100% - 137px)`;
 
@@ -220,6 +222,36 @@ addMarkersToMap = (restaurants = self.restaurants) => {
     });
     self.markers.push(marker);
   });
+};
+
+lazyLoadImages = () => {
+  const lazyImages = [].slice.call(
+    document.querySelectorAll('.restaurant-img')
+  );
+
+  console.log(lazyImages);
+  if ('IntersectionObserver' in window) {
+    let lazyImageObserver = new IntersectionObserver(function(
+      entries,
+      observer
+    ) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          let lazyImage = entry.target;
+          lazyImage.src = lazyImage.dataset.src;
+          lazyImage.srcset = lazyImage.dataset.srcset;
+          // lazyImage.classList.remove('lazy');
+          lazyImageObserver.unobserve(lazyImage);
+        }
+      });
+    });
+
+    lazyImages.forEach(function(lazyImage) {
+      lazyImageObserver.observe(lazyImage);
+    });
+  } else {
+    // Possibly fall back to a more compatible method here
+  }
 };
 
 /**
