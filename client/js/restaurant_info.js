@@ -164,9 +164,11 @@ createReviewHTML = review => {
  */
 fillBreadcrumb = (restaurant = self.restaurant) => {
   const breadcrumb = document.getElementById('breadcrumb');
-  const li = document.createElement('li');
-  li.innerHTML = restaurant.name;
-  breadcrumb.appendChild(li);
+  if (breadcrumb.childNodes.length < 4) {
+    const li = document.createElement('li');
+    li.innerHTML = restaurant.name;
+    breadcrumb.appendChild(li);
+  }
 };
 
 /**
