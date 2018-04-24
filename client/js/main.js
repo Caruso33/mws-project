@@ -174,7 +174,7 @@ createRestaurantHTML = restaurant => {
   figcap.innerHTML = `Restaurant ${restaurant.name}`;
 
   // srcset: serving the right img size to the right viewport width
-  const origImg = image.src.slice(0, -16);
+  const origImg = image.src.slice(0, -17);
   image['data-src'] = `${origImg}.webp`;
   image['data-srcset'] = `${origImg}-250_small-min.webp 250w,
                   ${origImg}-400_medium-min.webp 400w`;
@@ -228,7 +228,6 @@ lazyLoadImages = () => {
   const lazyImages = [].slice.call(
     document.querySelectorAll('.restaurant-img')
   );
-
   console.log(lazyImages);
   if ('IntersectionObserver' in window) {
     let lazyImageObserver = new IntersectionObserver(function(
@@ -238,6 +237,7 @@ lazyLoadImages = () => {
       entries.forEach(function(entry) {
         if (entry.isIntersecting) {
           let lazyImage = entry.target;
+          console.log(entry.taget);
           lazyImage.src = lazyImage.dataset.src;
           lazyImage.srcset = lazyImage.dataset.srcset;
           // lazyImage.classList.remove('lazy');
