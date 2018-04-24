@@ -173,9 +173,9 @@ createRestaurantHTML = restaurant => {
   figcap.innerHTML = `Restaurant ${restaurant.name}`;
 
   // srcset: serving the right img size to the right viewport width
-  const origImg = image.src.slice(0, -4);
-  image.srcset = `${origImg}-250_small-min.jpg 250w,
-                  ${origImg}-400_medium-min.jpg 400w`;
+  const origImg = image.src.slice(0, -5);
+  image.srcset = `${origImg}-250_small-min.webp 250w,
+                  ${origImg}-400_medium-min.webp 400w`;
   image.sizes = `(min-width: 434px) 300px, calc(100% - 137px)`;
 
   fig.append(image);

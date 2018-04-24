@@ -66,11 +66,11 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
   figcap.innerHTML = `Restaurant ${restaurant.name}`;
 
   // srcset: serving the right img size to the right viewport width
-  const origImg = image.src.slice(0, -4);
-  image.srcset = `${origImg}-250_small-min.jpg 250w,
-                  ${origImg}-400_medium-min.jpg 400w,
-                  ${origImg}-600_large-min.jpg 600w,
-                  ${origImg}-800_orig-min.jpg 800w
+  const origImg = image.src.slice(0, -5);
+  image.srcset = `${origImg}-250_small-min.webp 250w,
+                  ${origImg}-400_medium-min.webp 400w,
+                  ${origImg}-600_large-min.webp 600w,
+                  ${origImg}-800_orig-min.webp 800w
                   `;
   image.sizes = `90vw`;
 
