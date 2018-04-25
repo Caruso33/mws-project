@@ -249,7 +249,32 @@ const lazyLoadImages = () => {
       lazyImageObserver.observe(lazyImage);
     });
   } else {
+    console.log('LazyLoadImages failed');
+  }
+};
+
+const lazyLoadGoogleMap = () => {
+  const lazyMap = [].slice.call(document.querySelectorAll('#map'));
+
+  if ('IntersectionObserver' in window) {
+    let lazyGoogleMapObserver = new IntersectionObserver(function(
+      entries,
+      observer
+    ) {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          let lazyGoogleMap = entry.target;
+          initializeMap();
+          lazyMapObserver.unobserve(lazyGoogleMap);
+        }
+      });
+    });
+    lazyMap.forEach(map => {
+      lazyMapObserver.observe(map);
+    });
+  } else {
     // Possibly fall back to a more compatible method here
+    console.log('lazy load map did not succeed');
   }
 };
 
