@@ -235,7 +235,7 @@ const lazyLoadImages = () => {
       entries,
       observer
     ) {
-      entries.forEach(function(entry) {
+      entries.forEach(entry => {
         if (entry.isIntersecting) {
           let lazyImage = entry.target;
           lazyImage.src = lazyImage['data-src'];
@@ -245,7 +245,7 @@ const lazyLoadImages = () => {
       });
     });
 
-    lazyImages.forEach(function(lazyImage) {
+    lazyImages.forEach(lazyImage => {
       lazyImageObserver.observe(lazyImage);
     });
   } else {
@@ -253,35 +253,35 @@ const lazyLoadImages = () => {
   }
 };
 
-const lazyLoadGoogleMap = () => {
-  const lazyMap = [].slice.call(document.querySelectorAll('#map'));
-
-  if ('IntersectionObserver' in window) {
-    let lazyGoogleMapObserver = new IntersectionObserver(function(
-      entries,
-      observer
-    ) {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          let lazyGoogleMap = entry.target;
-          initializeMap();
-          lazyMapObserver.unobserve(lazyGoogleMap);
-        }
-      });
-    });
-    lazyMap.forEach(map => {
-      lazyMapObserver.observe(map);
-    });
-  } else {
-    // Possibly fall back to a more compatible method here
-    console.log('lazy load map did not succeed');
-  }
-};
+// const lazyLoadGoogleMap = () => {
+//   const lazyMap = [].slice.call(document.querySelectorAll('#map'));
+//
+//   if ('IntersectionObserver' in window) {
+//     let lazyGoogleMapObserver = new IntersectionObserver(function(
+//       entries,
+//       observer
+//     ) {
+//       entries.forEach(entry => {
+//         if (entry.isIntersecting) {
+//           let lazyGoogleMap = entry.target;
+//           initializeMap();
+//           lazyMapObserver.unobserve(lazyGoogleMap);
+//         }
+//       });
+//     });
+//     lazyMap.forEach(map => {
+//       lazyMapObserver.observe(map);
+//     });
+//   } else {
+//     // Possibly fall back to a more compatible method here
+//     console.log('LazyLoadGoogleMaps failed');
+//   }
+// };
 
 /**
  * Add service-worker
  */
-function serviceWorker() {
+const serviceWorker = () => {
   if (!navigator.serviceWorker) return;
 
   navigator.serviceWorker
@@ -299,4 +299,4 @@ function serviceWorker() {
       // });
     })
     .catch(err => console.log('[ServiceWorker] registration failed!', err));
-}
+};
