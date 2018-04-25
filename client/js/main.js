@@ -225,7 +225,8 @@ const addMarkersToMap = (restaurants = self.restaurants) => {
     self.markers.push(marker);
   });
 };
-
+// Lazy loading for images as from:
+// https://developers.google.com/web/fundamentals/performance/lazy-loading-guidance/images-and-video/
 const lazyLoadImages = () => {
   const lazyImages = [].slice.call(
     document.querySelectorAll('.restaurant-img')
