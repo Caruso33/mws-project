@@ -1,6 +1,7 @@
 let restaurants, neighborhoods, cuisines;
 var map;
 var markers = [];
+var lazyImages = [];
 const logging = false;
 
 /**
@@ -228,7 +229,7 @@ lazyLoadImages = () => {
   const lazyImages = [].slice.call(
     document.querySelectorAll('.restaurant-img')
   );
-  console.log(lazyImages);
+  // console.log(lazyImages[3].attributes[1]);
   if ('IntersectionObserver' in window) {
     let lazyImageObserver = new IntersectionObserver(function(
       entries,
@@ -237,9 +238,9 @@ lazyLoadImages = () => {
       entries.forEach(function(entry) {
         if (entry.isIntersecting) {
           let lazyImage = entry.target;
-          console.log(entry.taget);
-          lazyImage.src = lazyImage.dataset.src;
-          lazyImage.srcset = lazyImage.dataset.srcset;
+          lazyImage.src = lazyImage['data-src'];
+          // console.log(lazyImage.src);
+          lazyImage.srcset = lazyImage['data-srcset'];
           // lazyImage.classList.remove('lazy');
           lazyImageObserver.unobserve(lazyImage);
         }
