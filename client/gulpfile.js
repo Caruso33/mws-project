@@ -4,7 +4,6 @@ const webp = require('gulp-webp');
 const uglify = require('gulp-uglify');
 const babel = require('gulp-babel');
 const sourcemaps = require('gulp-sourcemaps');
-const gzip = require('gulp-gzip');
 
 const minifyCSS = require('gulp-minify-css');
 const autoprefixer = require('gulp-autoprefixer');
@@ -44,7 +43,6 @@ gulp.task('scripts', () =>
       })
     )
     .pipe(sourcemaps.write())
-    // .pipe(gzip({ append: false }))
     .pipe(gulp.dest('js/dist'))
 );
 

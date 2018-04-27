@@ -123,77 +123,7 @@ main {
   display: flex;
   flex-direction: column;
 }
-@media screen and (max-width: 340px) {
-  .review-date {
-    display: none;
-  }
-}
-@media screen and (min-width: 360px) {
-  .review-author {
-    font-size: 1.5rem;
-  }
-  .review-date {
-    display: inline;
-    font-size: 1.2rem;
-    margin-top: 5px;
-  }
-  .review-rating {
-    font-size: 1.3rem;
-  }
-  .review-comments {
-    font-size: 0.9rem;
-  }
-  #reviews-list li {
-    width: 320px;
-  }
-  #restaurant-address {
-    font-size: 1rem;
-  }
-  #restaurant-hours td {
-    margin-right: 10px;
-    width: 140px;
-  }
-}
-@media screen and (min-width: 400px) {
-  .review-comments {
-    font-size: 1rem;
-  }
-}
 
-@media screen and (min-width: 444px) {
-  .review-author {
-    font-size: 1.8rem;
-  }
-  #breadcrumb li {
-    font-size: 1.1rem;
-  }
-  #restaurant-cuisine {
-    font-size: 14pt;
-  }
-  #restaurant-address {
-    text-align: center;
-    font-size: 1.1rem;
-  }
-  #restaurant-hours {
-    margin: auto;
-  }
-  #restaurant-hours td {
-    max-width: 160px;
-    width: 160px;
-    font-size: 1rem;
-  }
-  #footer {
-    font-size: 10pt;
-  }
-  .inside #map-container {
-    margin-top: calc(80px + 66px);
-  }
-}
-@media screen and (min-width: 459px) {
-  .filter-options {
-    height: 60px;
-  }
-}
 @media screen and (min-width: 600px) {
   nav h1 a {
     font-size: 16pt;
