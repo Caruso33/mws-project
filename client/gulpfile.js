@@ -4,11 +4,11 @@ const webp = require('gulp-webp');
 const uglify = require('gulp-uglify');
 const babel = require('gulp-babel');
 const sourcemaps = require('gulp-sourcemaps');
-const concat = require('gulp-concat');
+const gzip = require('gulp-gzip');
 
-var minifyCSS = require('gulp-minify-css');
-var autoprefixer = require('gulp-autoprefixer');
-var rename = require('gulp-rename');
+const minifyCSS = require('gulp-minify-css');
+const autoprefixer = require('gulp-autoprefixer');
+const rename = require('gulp-rename');
 
 const browserSync = require('browser-sync').create();
 
@@ -44,6 +44,7 @@ gulp.task('scripts', () =>
       })
     )
     .pipe(sourcemaps.write())
+    // .pipe(gzip({ append: false }))
     .pipe(gulp.dest('js/dist'))
 );
 
