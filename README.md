@@ -20,4 +20,5 @@ Using following server on port 1337
 
 * the audit json file and
 * screenshots of the audit
-  can be find in [Link to directory](/audit_info)
+
+  can be found in [Link to directory](/audit_info)
