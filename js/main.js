@@ -171,15 +171,17 @@ const createRestaurantHTML = restaurant => {
   image.className = 'restaurant-img';
   figcap.className = 'restaurant-figcap';
 
-  image.src = DBHelper.imageUrlForRestaurant(restaurant);
+  const placeholderImg = DBHelper.imageUrlForRestaurant(restaurant);
+  const id = Number(placeholderImg.slice(5, -17));
+  image.src = id > 3 ? '' : placeholderImg;
   image.alt = `An impression of restaurant ${restaurant.name}`;
   figcap.innerHTML = `Restaurant ${restaurant.name}`;
 
   // srcset: serving the right img size to the right viewport width
-  const origImg = image.src.slice(0, -17);
-  image['data-src'] = `${origImg}.webp`;
-  image['data-srcset'] = `${origImg}-250_small-min.webp 250w,
-                  ${origImg}-400_medium-min.webp 400w`;
+  const rawImg = placeholderImg.slice(0, -17);
+  image['data-src'] = `${rawImg}.webp`;
+  image['data-srcset'] = `${rawImg}-250_small-min.webp 250w,
+                  ${rawImg}-400_medium-min.webp 400w`;
   image.sizes = `(min-width: 434px) 300px, calc(100% - 137px)`;
 
   fig.append(image);
