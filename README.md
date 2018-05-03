@@ -17,3 +17,7 @@ Using following server on port 1337
 * babel-polyfill needed for es6 gulp js-uglifying
 
 ### Remarks on Lighthouse-audit
+
+* the audit json file and
+* screenshots of the audit
+  can be find in [Link to directory](/audit_info)
