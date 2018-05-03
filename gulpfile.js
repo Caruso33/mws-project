@@ -38,7 +38,7 @@ gulp.task('scripts', () =>
           unused: true,
           if_return: true,
           join_vars: true,
-          drop_console: true
+          drop_console: false
         }
       })
     )
@@ -55,15 +55,23 @@ gulp.task('css', () =>
     .pipe(gulp.dest('css'))
 );
 
-gulp.task('default', gulp.parallel('css', 'scripts'), () => {
-  gulp.watch('css/*.css', gulp.task('css'));
-  gulp.watch('js/*.js', gulp.task('scripts'));
-  gulp.watch('index.html').on('change', browserSync.reload);
-  gulp.watch('restaurant.html').on('change', browserSync.reload);
-
+gulp.task('watch', done => {
   browserSync.init({
     server: {
       baseDir: './'
     }
   });
+  gulp.watch('css/*.css', gulp.series(gulp.task('css'), browserSync.reload));
+  gulp.watch('js/*.js', gulp.series(gulp.task('scripts'), browserSync.reload));
+  gulp.watch('index.html').on('change', browserSync.reload);
+  gulp.watch('restaurant.html').on('change', browserSync.reload);
+  done();
 });
+
+gulp.task(
+  'default',
+  gulp.series(gulp.parallel('css', 'scripts'), gulp.task('watch')),
+  () => {
+    console.log('[gulp] finished');
+  }
+);
