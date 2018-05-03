@@ -14,11 +14,13 @@ Using following server on port 1337
 * separating critcal css in style tags
 * minifying of css and js-files
 * using localforage for indexedDB
-* babel-polyfill needed for es6 gulp js-uglifying
+* skip link for google maps
 
 ### Remarks on Lighthouse-audit
 
 * the audit json file and
 * screenshots of the audit
 
-  can be found in [Link to directory](/audit_info)
+  can be found in [in this directory](/audit_info/audit4_success)
+
+I ran the audit in incognito mode

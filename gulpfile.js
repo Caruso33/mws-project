@@ -1,9 +1,10 @@
 const gulp = require('gulp');
 const webp = require('gulp-webp');
 
-const uglify = require('gulp-uglify');
-const babel = require('gulp-babel');
-const sourcemaps = require('gulp-sourcemaps');
+const uglifyjs = require('uglify-es');
+const composer = require('gulp-uglify/composer');
+const minify = composer(uglifyjs, console);
+const pump = require('pump');
 
 const minifyCSS = require('gulp-minify-css');
 const autoprefixer = require('gulp-autoprefixer');
@@ -18,32 +19,8 @@ gulp.task('imgs', () =>
     .pipe(gulp.dest('img/'))
 );
 
-gulp.task('scripts', () =>
-  gulp
-    .src('js/*.js')
-    .pipe(sourcemaps.init())
-    .pipe(
-      babel({
-        presets: ['env']
-      })
-    )
-    .pipe(
-      uglify({
-        mangle: true,
-        compress: {
-          sequences: true,
-          dead_code: true,
-          conditionals: true,
-          booleans: true,
-          unused: true,
-          if_return: true,
-          join_vars: true,
-          drop_console: true
-        }
-      })
-    )
-    .pipe(sourcemaps.write())
-    .pipe(gulp.dest('js/dist'))
+gulp.task('scripts', done =>
+  pump([gulp.src('js/*.js'), minify(), gulp.dest('js/dist')], done)
 );
 
 gulp.task('css', () =>

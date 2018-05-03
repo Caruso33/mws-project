@@ -6,11 +6,11 @@ const filesToCache = [
   '/',
   '/index.html',
   '/restaurant.html',
-  '/js/main.js',
-  '/js/dbhelper.js',
-  '/js/restaurant_info.js',
-  '/css/styles.css',
-  '/css/responsive.css'
+  '/js/dist/main.js',
+  '/js/dist/dbhelper.js',
+  '/js/dist/restaurant_info.js',
+  '/js/lib/localforage.min.js',
+  '/css/styles_min.css'
 ];
 
 self.addEventListener('install', event => {
