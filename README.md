@@ -21,6 +21,6 @@ Using following server on port 1337
 * the audit json file and
 * screenshots of the audit
 
-  can be found in [in this directory](/audit_info/audit4_success)
+  can be found in [this directory](/audit_info/audit4-success)
 
-I ran the audit in incognito mode
+* I ran the audit in incognito mode
