@@ -172,8 +172,7 @@ const createRestaurantHTML = restaurant => {
   figcap.className = 'restaurant-figcap';
 
   const placeholderImg = DBHelper.imageUrlForRestaurant(restaurant);
-  const id = Number(placeholderImg.slice(5, -17));
-  image.src = id > 3 ? '' : placeholderImg;
+  image.src = '';
   image.alt = `An impression of restaurant ${restaurant.name}`;
   figcap.innerHTML = `Restaurant ${restaurant.name}`;
 
