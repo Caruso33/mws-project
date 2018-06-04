@@ -1,13 +1,14 @@
 @charset "utf-8";
+
 /* CSS Document */
 
 body,
 td,
 th,
 p {
+  color: #333333;
   font-family: Arial, Helvetica, sans-serif;
   font-size: 0.9rem;
-  color: #333;
   line-height: 1.5;
 }
 body {
@@ -15,11 +16,11 @@ body {
   margin: 0;
   position: relative;
 }
-ul,
-li {
+li,
+ul {
+  color: #333333;
   font-family: Arial, Helvetica, sans-serif;
   font-size: 10pt;
-  color: #333;
 }
 a {
   color: orange;
@@ -31,8 +32,9 @@ a:focus {
   text-decoration: none;
 }
 a img {
-  border: none 0px #fff;
+  border: none 0 #ffffff;
 }
+
 h1,
 h2,
 h3,
@@ -40,7 +42,7 @@ h4,
 h5,
 h6 {
   font-family: Arial, Helvetica, sans-serif;
-  margin: 0 0 20px;
+  margin: 0 auto;
 }
 article,
 aside,
@@ -56,13 +58,13 @@ nav,
 section {
   display: block;
 }
-#maincontent {
+.main {
   background-color: #f3f3f3;
   min-height: 100%;
 }
-#footer {
-  background-color: #444;
-  color: #eee;
+.footer {
+  background-color: #444444;
+  color: #eeeeee;
   font-size: 8pt;
   letter-spacing: 1px;
   padding: 25px;
@@ -70,31 +72,32 @@ section {
   text-transform: uppercase;
 }
 .skiplink {
-  position: absolute;
-  top: -500px;
-  height: 80px;
-  width: 200px;
   background: #fdfdfd;
-  text-align: center;
   box-sizing: border-box;
+  height: 80px;
   padding: 20px;
+  position: absolute;
+  text-align: center;
+  top: -500px;
+  width: 200px;
   z-index: 1;
 }
 .skiplink:focus {
   top: 0;
 }
+
 /* ====================== Navigation ====================== */
 nav {
-  width: 100%;
-  height: 80px;
+  align-items: center;
   background-color: #252831;
+  display: flex;
+  height: 80px;
   text-align: center;
+  width: 100%;
 }
-nav h1 {
-  margin: auto;
-}
-nav h1 a {
-  color: #fff;
+
+nav a {
+  color: #ffffff;
   font-size: 14pt;
   font-weight: 200;
   letter-spacing: 10px;
@@ -103,17 +106,12 @@ nav h1 a {
 
 /* ====================== Map ====================== */
 #map {
+  background-color: #cccccc;
   height: 400px;
   width: 100%;
-  background-color: #ccc;
 }
 
 /* ====================== Merge responsive ====================== */
-nav {
-  display: flex;
-  align-items: center;
-}
-
 section ul {
   display: flex;
   flex-wrap: wrap;
@@ -125,7 +123,7 @@ main {
 }
 
 @media screen and (min-width: 600px) {
-  nav h1 a {
+  nav a {
     font-size: 16pt;
   }
   #breadcrumb li {

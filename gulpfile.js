@@ -16,7 +16,7 @@ gulp.task('imgs', () =>
   gulp
     .src('img/*.jpg')
     .pipe(webp())
-    .pipe(gulp.dest('img/'))
+    .pipe(gulp.dest('img'))
 );
 
 gulp.task('scripts', done =>
@@ -25,23 +25,30 @@ gulp.task('scripts', done =>
 
 gulp.task('css', () =>
   gulp
-    .src('css/*.css')
+    .src('css/styles.css')
     .pipe(minifyCSS())
-    .pipe(rename('styles_min.css'))
+    .pipe(rename('/styles_min.css'))
     .pipe(autoprefixer('last 2 version', 'safari 5', 'ie 8', 'ie 9'))
     .pipe(gulp.dest('css'))
 );
 
-gulp.task('watch', done => {
+gulp.task('watch-browsersync', done => {
   browserSync.init({
     server: {
-      baseDir: './'
+      baseDir: './',
+      directory: true
     }
   });
   gulp.watch('css/*.css', gulp.series(gulp.task('css'), browserSync.reload));
   gulp.watch('js/*.js', gulp.series(gulp.task('scripts'), browserSync.reload));
   gulp.watch('index.html').on('change', browserSync.reload);
   gulp.watch('restaurant.html').on('change', browserSync.reload);
+  done();
+});
+
+gulp.task('watch', done => {
+  gulp.watch('css/*.css', gulp.task('css'));
+  gulp.watch('js/*.js', gulp.task('scripts'));
   done();
 });
 

@@ -15,7 +15,7 @@ class DBHelper {
    * Fetch all restaurants.
    */
   static async fetchRestaurants(callback) {
-    window.localforage.getItem('restaurantsJson', (err, restaurants) => {
+    window.localStorage.getItem('restaurantsJson', (err, restaurants) => {
       if (restaurants) {
         return callback(null, restaurants);
       }
@@ -24,7 +24,7 @@ class DBHelper {
       const response = await fetch(DBHelper.DATABASE_URL);
       const responseJson = await response.json();
       callback(null, responseJson);
-      window.localforage.setItem('restaurantsJson', responseJson);
+      window.localStorage.setItem('restaurantsJson', responseJson);
     } catch (e) {
       callback(e.message, null);
     }
@@ -163,7 +163,7 @@ class DBHelper {
    * Restaurant image URL.
    */
   static imageUrlForRestaurant(restaurant) {
-    return `/img/${restaurant.id}-placeholder.webp`;
+    return `/img/webp/${restaurant.id}-placeholder.webp`;
   }
 
   /**

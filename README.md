@@ -1,11 +1,11 @@
 # Mobile Web Specialist Certification Course
 
-#### Stage 2 - Solution
+#### Stage 3 - Solution
 
 ### Dependencies
 
 Using following server on port 1337
-[Server repo](https://github.com/udacity/mws-restaurant-stage-2)
+[Server repo](https://github.com/udacity/mws-restaurant-stage-3)
 
 ### Remarks on implementation
 
@@ -21,6 +21,31 @@ Using following server on port 1337
 * the audit json file and
 * screenshots of the audit
 
-  can be found in [this directory](/audit_info/audit4-success)
+  can be found in [this directory](/audit_info/)
 
-* I ran the audit in incognito mode
+#### Todo-Notes
+
+* famililiarize with node Server
+* input form for Reviews, a11y it
+* posting to Server
+
+  POST http://localhost:1337/reviews/
+  {
+  "restaurant_id": <restaurant_id>,
+  "name": <reviewer_name>,
+  "rating": <rating>,
+  "comments": <comment_text>
+  }
+
+* putting to a Server
+
+PUT
+http://localhost:1337/restaurants/<restaurant_id>/?is_favorite=true
+http://localhost:1337/restaurants/<restaurant_id>/?is_favorite=false
+
+* switch to native localstorage / dexie
+* google maps splash screen in webp
+* google maps lazy loading
+* background sync - offline
+* inline style gulp it
+* minify css

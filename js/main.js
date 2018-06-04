@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', event => {
  * Fetch all neighborhoods and set their HTML.
  */
 const fetchNeighborhoods = () => {
-  window.localforage.getItem('restaurantData', function(err, restaurantList) {
+  window.localStorage.getItem('restaurantData', function (err, restaurantList) {
     if (restaurantList) {
       self.restaurantList = restaurantList;
     } else {
@@ -90,6 +90,7 @@ window.initMap = () => {
     center: loc,
     scrollwheel: false
   });
+
   const idleListener = google.maps.event.addListenerOnce(
     self.map,
     'idle',
@@ -178,6 +179,7 @@ const createRestaurantHTML = restaurant => {
 
   // srcset: serving the right img size to the right viewport width
   const rawImg = placeholderImg.slice(0, -17);
+
   image['data-src'] = `${rawImg}.webp`;
   image['data-srcset'] = `${rawImg}-250_small-min.webp 250w,
                   ${rawImg}-400_medium-min.webp 400w`;
@@ -232,8 +234,9 @@ const lazyLoadImages = () => {
   const lazyImages = [].slice.call(
     document.querySelectorAll('.restaurant-img')
   );
+
   if ('IntersectionObserver' in window) {
-    let lazyImageObserver = new IntersectionObserver(function(
+    let lazyImageObserver = new IntersectionObserver(function (
       entries,
       observer
     ) {
@@ -284,12 +287,16 @@ const lazyLoadImages = () => {
  * Add service-worker
  */
 const serviceWorker = () => {
-  if (!navigator.serviceWorker) return;
+  if (!navigator.serviceWorker) {
+    return;
+  }
 
   navigator.serviceWorker
     .register('/service-worker.js', { scope: '/' })
     .then(reg => {
-      if (logging) console.log('[ServiceWorker] registered');
+      if (logging) {
+        console.log('[ServiceWorker] registered');
+      }
       // if (reg.waiting) {
       //   console.log('[ServiceWorker] updated version is ready to be installed');
       // }

@@ -1,0 +1,30 @@
+{
+  "name": "mws-project",
+  "version": "1.0.0",
+  "description": "#### Stage 3 - Solution",
+  "main": "gulpfile.js",
+  "scripts": {
+    "gulp": "./node_modules/gulp/bin/gulp.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Caruso33/mws-project.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Caruso33/mws-project/issues"
+  },
+  "homepage": "https://github.com/Caruso33/mws-project#readme",
+  "devDependencies": {
+    "browser-sync": "^2.24.4",
+    "gulp": "^4.0.0",
+    "gulp-autoprefixer": "^5.0.0",
+    "gulp-minify-css": "^1.2.4",
+    "gulp-rename": "^1.2.3",
+    "gulp-uglify": "^3.0.0",
+    "gulp-webp": "^3.0.0",
+    "pump": "^3.0.0",
+    "uglify-es": "^3.3.9"
+  }
+}
