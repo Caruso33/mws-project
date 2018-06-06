@@ -164,6 +164,12 @@ const fillRestaurantsHTML = (restaurants = self.restaurants) => {
 const createRestaurantHTML = restaurant => {
   const li = document.createElement('li');
 
+  const fav = document.createElement('span');
+  if (restaurant.is_favorite) {
+    fav.innerHTML = `${String.fromCodePoint(0x1f31f)} This is a favorite`;
+  }
+  li.append(fav);
+
   const fig = document.createElement('figure');
   const image = document.createElement('img');
   const figcap = document.createElement('figcaption');
@@ -209,7 +215,6 @@ const createRestaurantHTML = restaurant => {
     'aria-label',
     `Press to view details of restaurant ${restaurant.name}`
   );
-
   li.append(more);
 
   return li;

@@ -67,6 +67,41 @@ const fillRestaurantHTML = (restaurant = self.restaurant) => {
   const name = document.getElementById('restaurant-name');
   name.innerHTML = restaurant.name;
 
+  if (document.querySelector('#favorite').childNodes.length === 0) {
+    const favdiv = document.querySelector('#favorite');
+    const favbutton = document.createElement('button');
+    const favp = document.createElement('p');
+    favp.innerHTML = 'click to change favorite state';
+
+    if (restaurant.is_favorite) {
+      favbutton.innerHTML = `${String.fromCodePoint(
+        0x1f31f
+      )} This is a favorite`;
+    } else {
+      favbutton.innerHTML = `${String.fromCodePoint(
+        0x25fb
+      )} No favorite of yours`;
+    }
+
+    favbutton.addEventListener('click', () => {
+      fetch(
+        `http://localhost:1337/restaurants/${
+          restaurant.id
+        }/?is_favorite=${!restaurant.is_favorite}`,
+        {
+          method: 'PUT',
+          body: {}
+        }
+      );
+      restaurant.is_favorite = !restaurant.is_favorite;
+      favdiv.removeChild(favbutton);
+      favdiv.removeChild(favp);
+      fillRestaurantHTML(restaurant);
+    });
+    favdiv.appendChild(favbutton);
+    favdiv.appendChild(favp);
+  }
+
   const address = document.getElementById('restaurant-address');
   address.innerHTML = restaurant.address;
 
@@ -143,15 +178,26 @@ const fillReviewsHTML = (reviews = self.reviews) => {
   const form = document.createElement('form');
   form.setAttribute('method', 'post');
   form.setAttribute('action', 'http://localhost:1337/reviews');
-  // form.setAttribute(
-  //   'onsubmit',
-  //   `window.location.replace='/restaurant.html?id=${self.restaurant.id}'`
-  //   `return (function() {
-  //     console.log('onsubmit function');
-  //   window.location.replace("/restaurant.html?id=${self.restaurant.id}");
-  //   return false;
-  // })()`
-  // );
+
+  form.onsubmit = e => {
+    e.preventDefault();
+
+    const newReviewRequest = {};
+    for (let i = 0; i < 4; i++) {
+      newReviewRequest[e.target[i].name] = e.target[i].value;
+    }
+
+    fetch('http://localhost:1337/reviews', {
+      method: 'POST',
+      newReviewRequest
+    });
+
+    ul.insertBefore(
+      createReviewHTML(newReviewRequest),
+      ul.childNodes[ul.childNodes.length - 1]
+    );
+  };
+
   form.classList.add('newReview');
 
   const textarea = document.createElement('textarea');
@@ -210,7 +256,7 @@ const createReviewHTML = review => {
   // Date is now a span inside the reviewer's name
   const date = document.createElement('span');
 
-  const reviewDate = new Date(review.createdAt);
+  const reviewDate = new Date(review.createdAt || Date.now());
   const month = reviewDate.getUTCMonth() + 1; //months from 1-12
   const day = reviewDate.getUTCDate();
   const year = reviewDate.getUTCFullYear();
