@@ -8,7 +8,7 @@ class DBHelper {
    */
   static get DATABASE_URL() {
     const port = 1337; // Change this to your server port
-    return `http://localhost:${port}/restaurants`;
+    return `http://localhost:${port}`;
   }
 
   /**
@@ -21,7 +21,7 @@ class DBHelper {
       }
     });
     try {
-      const response = await fetch(DBHelper.DATABASE_URL);
+      const response = await fetch(`${DBHelper.DATABASE_URL}/restaurants`);
       const responseJson = await response.json();
       callback(null, responseJson);
       window.localStorage.setItem('restaurantsJson', responseJson);
@@ -49,6 +49,29 @@ class DBHelper {
         }
       }
     });
+  }
+
+  /**
+   *  Fetch all reviews one restaurant
+   */
+  static async fetchRestaurantReviewsById(id, callback) {
+    window.localStorage.getItem(`reviewsJson?id=${id}`, (err, reviews) => {
+      console.log('fetching localStorage reviews');
+      if (reviews) {
+        return callback(null, reviews);
+      }
+    });
+    try {
+      const response = await fetch(
+        `${DBHelper.DATABASE_URL}/reviews/?restaurant_id=${id}`
+      );
+      const responseJson = await response.json();
+      console.log('setting localStorage reviews');
+      window.localStorage.setItem(`reviewsJson?id=${id}`, responseJson);
+      callback(null, responseJson);
+    } catch (e) {
+      callback(e.message, null);
+    }
   }
 
   /**

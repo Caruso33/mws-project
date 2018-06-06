@@ -58,11 +58,11 @@ nav,
 section {
   display: block;
 }
-.main {
+main {
   background-color: #f3f3f3;
   min-height: 100%;
 }
-.footer {
+footer {
   background-color: #444444;
   color: #eeeeee;
   font-size: 8pt;

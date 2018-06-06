@@ -82,8 +82,16 @@ const fillRestaurantHTML = (restaurant = self.restaurant) => {
   if (restaurant.operating_hours) {
     fillRestaurantHoursHTML();
   }
-  // fill reviews
-  fillReviewsHTML();
+
+  DBHelper.fetchRestaurantReviewsById(restaurant.id, (error, reviews) => {
+    if (!reviews) {
+      console.error(error);
+      return;
+    }
+    self.restaurant['reviews'] = reviews;
+    // fill reviews
+    fillReviewsHTML(reviews);
+  });
 };
 
 /**
@@ -111,7 +119,8 @@ const fillRestaurantHoursHTML = (
 /**
  * Create all reviews HTML and add them to the webpage.
  */
-const fillReviewsHTML = (reviews = self.restaurant.reviews) => {
+const fillReviewsHTML = reviews => {
+  console.log(`fillReviewsHTML: ${reviews}`);
   const container = document.getElementById('reviews-container');
   if (container.childNodes.length < 4) {
     const title = document.createElement('h2');
@@ -128,6 +137,63 @@ const fillReviewsHTML = (reviews = self.restaurant.reviews) => {
   reviews.forEach(review => {
     ul.appendChild(createReviewHTML(review));
   });
+
+  const form = document.createElement('form');
+  form.setAttribute('method', 'post');
+  form.setAttribute('action', 'http://localhost:1337/reviews');
+  // form.setAttribute(
+  //   'onsubmit',
+  //   `window.location.replace='/restaurant.html?id=${self.restaurant.id}'`
+  //   `return (function() {
+  //     console.log('onsubmit function');
+  //   window.location.replace("/restaurant.html?id=${self.restaurant.id}");
+  //   return false;
+  // })()`
+  // );
+  form.classList.add('newReview');
+
+  const textarea = document.createElement('textarea');
+  textarea.setAttribute('placeholder', 'Your review goes here...');
+  textarea.setAttribute('name', 'comments');
+
+  const inputForId = document.createElement('input');
+  inputForId.setAttribute('name', 'restaurant_id');
+  inputForId.setAttribute('value', self.restaurant.id);
+  inputForId.style.display = 'none';
+
+  const input = document.createElement('input');
+  input.setAttribute('name', 'name');
+  input.setAttribute('type', 'text');
+  input.setAttribute('placeholder', 'Your Name');
+
+  const button = document.createElement('button');
+  button.innerHTML = 'Create review';
+  button.setAttribute('type', 'submit');
+
+  // <option value="volvo">Volvo</option>
+  const select = document.createElement('select');
+  select.setAttribute('name', 'rating');
+
+  let optionText = '';
+  for (let i = 1; i < 6; i++) {
+    optionText += `${String.fromCodePoint(0x2b50)}`;
+    this[`option${i}`] = document.createElement('option');
+    this[`option${i}`].setAttribute('value', i);
+    this[`option${i}`].innerHTML = `${optionText} ${i} Stars`;
+    select.appendChild(this[`option${i}`]);
+  }
+
+  button.innerHTML = 'Create review';
+  button.setAttribute('type', 'submit');
+
+  form.appendChild(inputForId);
+  form.appendChild(input);
+  form.appendChild(textarea);
+  form.appendChild(select);
+  form.appendChild(button);
+
+  ul.appendChild(form);
+
   container.appendChild(ul);
 };
 
@@ -142,7 +208,13 @@ const createReviewHTML = review => {
 
   // Date is now a span inside the reviewer's name
   const date = document.createElement('span');
-  date.innerHTML = review.date;
+
+  const reviewDate = new Date(review.createdAt);
+  const month = reviewDate.getUTCMonth() + 1; //months from 1-12
+  const day = reviewDate.getUTCDate();
+  const year = reviewDate.getUTCFullYear();
+
+  date.innerHTML = year + '/' + month + '/' + day;
   date.classList.add('review-date');
   name.appendChild(date);
 
@@ -177,11 +249,17 @@ const fillBreadcrumb = (restaurant = self.restaurant) => {
  * Get a parameter by name from page URL.
  */
 const getParameterByName = (name, url) => {
-  if (!url) url = window.location.href;
+  if (!url) {
+    url = window.location.href;
+  }
   name = name.replace(/[\[\]]/g, '\\$&');
   const regex = new RegExp(`[?&]${name}(=([^&#]*)|&|#|$)`),
     results = regex.exec(url);
-  if (!results) return null;
-  if (!results[2]) return '';
+  if (!results) {
+    return null;
+  }
+  if (!results[2]) {
+    return '';
+  }
   return decodeURIComponent(results[2].replace(/\+/g, ' '));
 };
