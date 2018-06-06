@@ -24,7 +24,10 @@ class DBHelper {
       const response = await fetch(`${DBHelper.DATABASE_URL}/restaurants`);
       const responseJson = await response.json();
       callback(null, responseJson);
-      window.localStorage.setItem('restaurantsJson', responseJson);
+      window.localStorage.setItem(
+        'restaurantsJson',
+        JSON.stringify(responseJson)
+      );
     } catch (e) {
       callback(e.message, null);
     }
@@ -33,22 +36,35 @@ class DBHelper {
   /**
    * Fetch a restaurant by its ID.
    */
-  static fetchRestaurantById(id, callback) {
+  static async fetchRestaurantById(id, callback) {
     // fetch all restaurants with proper error handling.
-    DBHelper.fetchRestaurants((error, restaurants) => {
-      if (error) {
-        callback(error, null);
-      } else {
-        const restaurant = restaurants.find(r => r.id == id);
+    window.localStorage.getItem(
+      `restaurantJson?id=${id}`,
+      (err, restaurant) => {
         if (restaurant) {
-          // Got the restaurant
-          callback(null, restaurant);
-        } else {
-          // Restaurant does not exist in the database
-          callback('Restaurant does not exist', null);
+          return callback(null, restaurant);
         }
       }
-    });
+    );
+    try {
+      const response = await fetch(
+        `${DBHelper.DATABASE_URL}/restaurants/${id}`
+      );
+      if (response) {
+        // Got the restaurant
+        const responseJson = await response.json();
+        window.localStorage.setItem(
+          `restaurantJson?id=${id}`,
+          JSON.stringify(responseJson)
+        );
+        return callback(null, responseJson);
+      } else {
+        // Restaurant does not exist in the database
+        return callback('Restaurant does not exist', null);
+      }
+    } catch (e) {
+      callback(e.message, null);
+    }
   }
 
   /**
@@ -56,7 +72,6 @@ class DBHelper {
    */
   static async fetchRestaurantReviewsById(id, callback) {
     window.localStorage.getItem(`reviewsJson?id=${id}`, (err, reviews) => {
-      console.log('fetching localStorage reviews');
       if (reviews) {
         return callback(null, reviews);
       }
@@ -66,8 +81,10 @@ class DBHelper {
         `${DBHelper.DATABASE_URL}/reviews/?restaurant_id=${id}`
       );
       const responseJson = await response.json();
-      console.log('setting localStorage reviews');
-      window.localStorage.setItem(`reviewsJson?id=${id}`, responseJson);
+      window.localStorage.setItem(
+        `reviewsJson?id=${id}`,
+        JSON.stringify(responseJson)
+      );
       callback(null, responseJson);
     } catch (e) {
       callback(e.message, null);

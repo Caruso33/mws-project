@@ -1,5 +1,5 @@
 'use strict';
-let restaurant;
+let restaurant, reviews;
 var map;
 
 /**
@@ -25,8 +25,9 @@ window.initMap = () => {
 /**
  * Get current restaurant from page URL.
  */
-const fetchRestaurantFromURL = callback => {
+const fetchRestaurantFromURL = async callback => {
   if (self.restaurant) {
+    console.log('fetchRestaurantFromURL: restaurant already fetched!');
     // restaurant already fetched!
     callback(null, self.restaurant);
     return;
@@ -37,15 +38,25 @@ const fetchRestaurantFromURL = callback => {
     error = 'No restaurant id in URL';
     callback(error, null);
   } else {
-    DBHelper.fetchRestaurantById(id, (error, restaurant) => {
+    await DBHelper.fetchRestaurantById(id, (error, restaurant) => {
       self.restaurant = restaurant;
       if (!restaurant) {
         console.error(error);
         return;
       }
-      fillRestaurantHTML();
       callback(null, restaurant);
     });
+    await DBHelper.fetchRestaurantReviewsById(
+      self.restaurant.id,
+      (error, reviews) => {
+        if (!reviews) {
+          console.error(error);
+          return;
+        }
+        self.reviews = reviews;
+      }
+    );
+    fillRestaurantHTML();
   }
 };
 
@@ -82,16 +93,8 @@ const fillRestaurantHTML = (restaurant = self.restaurant) => {
   if (restaurant.operating_hours) {
     fillRestaurantHoursHTML();
   }
-
-  DBHelper.fetchRestaurantReviewsById(restaurant.id, (error, reviews) => {
-    if (!reviews) {
-      console.error(error);
-      return;
-    }
-    self.restaurant['reviews'] = reviews;
-    // fill reviews
-    fillReviewsHTML(reviews);
-  });
+  // fill reviews
+  fillReviewsHTML();
 };
 
 /**
@@ -119,8 +122,7 @@ const fillRestaurantHoursHTML = (
 /**
  * Create all reviews HTML and add them to the webpage.
  */
-const fillReviewsHTML = reviews => {
-  console.log(`fillReviewsHTML: ${reviews}`);
+const fillReviewsHTML = (reviews = self.reviews) => {
   const container = document.getElementById('reviews-container');
   if (container.childNodes.length < 4) {
     const title = document.createElement('h2');
@@ -170,7 +172,6 @@ const fillReviewsHTML = reviews => {
   button.innerHTML = 'Create review';
   button.setAttribute('type', 'submit');
 
-  // <option value="volvo">Volvo</option>
   const select = document.createElement('select');
   select.setAttribute('name', 'rating');
 
