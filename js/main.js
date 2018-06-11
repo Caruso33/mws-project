@@ -78,28 +78,42 @@ const fillCuisinesHTML = (cuisines = self.cuisines) => {
 };
 
 /**
- * Initialize Google map, called from HTML.
+ * Initialize map container with image, and load Google map when clicked,
+ * initMap called from HTML.
  */
 window.initMap = () => {
   let loc = {
     lat: 40.722216,
     lng: -73.987501
   };
-  self.map = new google.maps.Map(document.getElementById('map'), {
-    zoom: 12,
-    center: loc,
-    scrollwheel: false
+  const image = document.createElement('img');
+  const rootImgSrc = '/img/webp/maps-';
+  // image.src = `${rootImgSrc}1200.webp`;
+  image.srcset = `${rootImgSrc}360.webp 360w, ${rootImgSrc}500.webp 500w, ${rootImgSrc}700.webp 700w, ${rootImgSrc}900.webp 900w, ${rootImgSrc}1200.webp 1200w, ${rootImgSrc}1600.webp 1600w`;
+  image.alt = `Google Maps Preview`;
+
+  const mapDiv = document.getElementById('map');
+  mapDiv.appendChild(image);
+
+  mapDiv.addEventListener('click', e => {
+    self.map = new google.maps.Map(mapDiv, {
+      zoom: 12,
+      center: loc,
+      scrollwheel: false
+    });
+
+    const idleListener = google.maps.event.addListenerOnce(
+      self.map,
+      'idle',
+      () => {
+        let iframe = document.querySelector('iframe');
+        iframe.setAttribute('aria-hidden', 'true');
+        iframe.setAttribute('tabindex', '-1');
+      }
+    );
+    updateRestaurants();
   });
 
-  const idleListener = google.maps.event.addListenerOnce(
-    self.map,
-    'idle',
-    () => {
-      let iframe = document.querySelector('iframe');
-      iframe.setAttribute('aria-hidden', 'true');
-      iframe.setAttribute('tabindex', '-1');
-    }
-  );
   updateRestaurants();
 };
 
@@ -262,31 +276,6 @@ const lazyLoadImages = () => {
     console.log('LazyLoadImages failed');
   }
 };
-
-// const lazyLoadGoogleMap = () => {
-//   const lazyMap = [].slice.call(document.querySelectorAll('#map'));
-//
-//   if ('IntersectionObserver' in window) {
-//     let lazyGoogleMapObserver = new IntersectionObserver(function(
-//       entries,
-//       observer
-//     ) {
-//       entries.forEach(entry => {
-//         if (entry.isIntersecting) {
-//           let lazyGoogleMap = entry.target;
-//           initializeMap();
-//           lazyMapObserver.unobserve(lazyGoogleMap);
-//         }
-//       });
-//     });
-//     lazyMap.forEach(map => {
-//       lazyMapObserver.observe(map);
-//     });
-//   } else {
-//     // Possibly fall back to a more compatible method here
-//     console.log('LazyLoadGoogleMaps failed');
-//   }
-// };
 
 /**
  * Add service-worker

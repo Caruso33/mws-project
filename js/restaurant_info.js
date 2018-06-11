@@ -3,22 +3,45 @@ let restaurant, reviews;
 var map;
 
 /**
- * Initialize Google map, called from HTML.
+ * Initialize map container with image, and load Google map when clicked,
+ * initMap called from HTML.
  */
 window.initMap = () => {
+  const image = document.createElement('img');
+  const rootImgSrc = '/img/webp/maps-';
+  // image.src = `${rootImgSrc}1200.webp`;
+  image.srcset = `${rootImgSrc}360.webp 360w, ${rootImgSrc}500.webp 500w, ${rootImgSrc}700.webp 700w, ${rootImgSrc}900.webp 900w, ${rootImgSrc}1200.webp 1200w, ${rootImgSrc}1600.webp 1600w`;
+  image.alt = `Google Maps Preview`;
+
+  const mapDiv = document.getElementById('map');
+  mapDiv.appendChild(image);
+
   fetchRestaurantFromURL((error, restaurant) => {
     if (error) {
       // Got an error!
       console.error(error);
     } else {
-      self.map = new google.maps.Map(document.getElementById('map'), {
-        zoom: 16,
-        center: restaurant.latlng,
-        scrollwheel: false
+      mapDiv.addEventListener('click', e => {
+        self.map = new google.maps.Map(mapDiv, {
+          zoom: 16,
+          center: restaurant.latlng,
+          scrollwheel: false
+        });
+        //
+        const idleListener = google.maps.event.addListenerOnce(
+          self.map,
+          'idle',
+          () => {
+            let iframe = document.querySelector('iframe');
+            iframe.setAttribute('aria-hidden', 'true');
+            iframe.setAttribute('tabindex', '-1');
+          }
+        );
+
+        DBHelper.mapMarkerForRestaurant(self.restaurant, self.map);
       });
-      fillBreadcrumb();
-      DBHelper.mapMarkerForRestaurant(self.restaurant, self.map);
     }
+    fillBreadcrumb();
   });
 };
 
@@ -67,40 +90,70 @@ const fillRestaurantHTML = (restaurant = self.restaurant) => {
   const name = document.getElementById('restaurant-name');
   name.innerHTML = restaurant.name;
 
-  if (document.querySelector('#favorite').childNodes.length === 0) {
-    const favdiv = document.querySelector('#favorite');
-    const favbutton = document.createElement('button');
-    const favp = document.createElement('p');
-    favp.innerHTML = 'click to change favorite state';
+  console.log(self.restaurant.is_favorite);
 
-    if (restaurant.is_favorite) {
-      favbutton.innerHTML = `${String.fromCodePoint(
-        0x1f31f
-      )} This is a favorite`;
-    } else {
-      favbutton.innerHTML = `${String.fromCodePoint(
-        0x25fb
-      )} No favorite of yours`;
-    }
+  const favdiv = document.querySelector('#favorite');
+  const favbutton = document.createElement('button');
+  const favp = document.createElement('p');
+  favp.innerHTML = 'click to change favorite state';
 
-    favbutton.addEventListener('click', () => {
-      fetch(
+  favbutton.innerHTML = self.restaurant.is_favorite
+    ? `${String.fromCodePoint(0x1f31f)} This is a favorite`
+    : `${String.fromCodePoint(0x25fb)} No favorite of yours`;
+
+  favbutton.addEventListener('click', async () => {
+    try {
+      await fetch(
         `http://localhost:1337/restaurants/${
           restaurant.id
         }/?is_favorite=${!restaurant.is_favorite}`,
         {
           method: 'PUT',
-          body: {}
+          headers: {
+            Accept: 'application/json'
+          }
         }
       );
-      restaurant.is_favorite = !restaurant.is_favorite;
+      self.restaurant.is_favorite = !restaurant.is_favorite;
       favdiv.removeChild(favbutton);
       favdiv.removeChild(favp);
-      fillRestaurantHTML(restaurant);
-    });
-    favdiv.appendChild(favbutton);
-    favdiv.appendChild(favp);
-  }
+      fillRestaurantHTML(self.restaurant);
+    } catch (err) {
+      console.error('You are offline, saving data to storage ', err);
+
+      window.localStorage.setItem(
+        `favoriteJson?id=${restaurant.id}`,
+        JSON.stringify({
+          id: restaurant.id,
+          favorite: restaurant.is_favorite
+        })
+      );
+
+      window.addEventListener('online', () => {
+        console.log('You are online sending data to server');
+
+        window.localStorage.getItem(
+          `favoriteJson?id=${restaurant.id}`,
+          (err, { id, favorite }) => {
+            if (err) {
+              console.error('error getting the stored data back ', err);
+            }
+            fetch(
+              `http://localhost:1337/restaurants/${id}/?is_favorite=${!favorite}`,
+              {
+                method: 'PUT',
+                headers: {
+                  Accept: 'application/json'
+                }
+              }
+            );
+          }
+        );
+      });
+    }
+  });
+  favdiv.appendChild(favbutton);
+  favdiv.appendChild(favp);
 
   const address = document.getElementById('restaurant-address');
   address.innerHTML = restaurant.address;

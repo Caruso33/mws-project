@@ -89,11 +89,6 @@
   font-size: 14pt;
 }
 
-#favorite p {
-
-  /* display: none; */
-}
-
 button :hover {
   display: block;
   font-size: 200px;
