@@ -88,31 +88,38 @@ window.initMap = () => {
   };
   const image = document.createElement('img');
   const rootImgSrc = '/img/webp/maps-';
-  // image.src = `${rootImgSrc}1200.webp`;
+  image.src = `${rootImgSrc}500.webp`;
   image.srcset = `${rootImgSrc}360.webp 360w, ${rootImgSrc}500.webp 500w, ${rootImgSrc}700.webp 700w, ${rootImgSrc}900.webp 900w, ${rootImgSrc}1200.webp 1200w, ${rootImgSrc}1600.webp 1600w`;
   image.alt = `Google Maps Preview`;
+  image.setAttribute('tabindex', '0');
 
   const mapDiv = document.getElementById('map');
   mapDiv.appendChild(image);
 
-  mapDiv.addEventListener('click', e => {
-    self.map = new google.maps.Map(mapDiv, {
-      zoom: 12,
-      center: loc,
-      scrollwheel: false
-    });
+  // TODO: FOCUS WITH TAB AND MAKE MAP LOADABLE WITH SPACE / ENTER
+  // TODO: ADDEVENTLISTENER SHOULD ONLY FIRE ONCE??????????????????????????????
+  mapDiv.addEventListener(
+    'click',
+    e => {
+      self.map = new google.maps.Map(mapDiv, {
+        zoom: 12,
+        center: loc,
+        scrollwheel: false
+      });
 
-    const idleListener = google.maps.event.addListenerOnce(
-      self.map,
-      'idle',
-      () => {
-        let iframe = document.querySelector('iframe');
-        iframe.setAttribute('aria-hidden', 'true');
-        iframe.setAttribute('tabindex', '-1');
-      }
-    );
-    updateRestaurants();
-  });
+      const idleListener = google.maps.event.addListenerOnce(
+        self.map,
+        'idle',
+        () => {
+          let iframe = document.querySelector('iframe');
+          iframe.setAttribute('aria-hidden', 'true');
+          iframe.setAttribute('tabindex', '-1');
+        }
+      );
+      updateRestaurants();
+    },
+    true
+  );
 
   updateRestaurants();
 };

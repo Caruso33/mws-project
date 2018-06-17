@@ -9,7 +9,7 @@ var map;
 window.initMap = () => {
   const image = document.createElement('img');
   const rootImgSrc = '/img/webp/maps-';
-  // image.src = `${rootImgSrc}1200.webp`;
+  image.src = `${rootImgSrc}500.webp`;
   image.srcset = `${rootImgSrc}360.webp 360w, ${rootImgSrc}500.webp 500w, ${rootImgSrc}700.webp 700w, ${rootImgSrc}900.webp 900w, ${rootImgSrc}1200.webp 1200w, ${rootImgSrc}1600.webp 1600w`;
   image.alt = `Google Maps Preview`;
 
@@ -21,25 +21,31 @@ window.initMap = () => {
       // Got an error!
       console.error(error);
     } else {
-      mapDiv.addEventListener('click', e => {
-        self.map = new google.maps.Map(mapDiv, {
-          zoom: 16,
-          center: restaurant.latlng,
-          scrollwheel: false
-        });
-        //
-        const idleListener = google.maps.event.addListenerOnce(
-          self.map,
-          'idle',
-          () => {
-            let iframe = document.querySelector('iframe');
-            iframe.setAttribute('aria-hidden', 'true');
-            iframe.setAttribute('tabindex', '-1');
-          }
-        );
+      // TODO: FOCUS WITH TAB AND MAKE MAP LOADABLE WITH SPACE / ENTER
+      // TODO: ADDEVENTLISTENER SHOULD ONLY FIRE ONCE??????????????????????????????
+      mapDiv.addEventListener(
+        'click',
+        e => {
+          self.map = new google.maps.Map(mapDiv, {
+            zoom: 16,
+            center: restaurant.latlng,
+            scrollwheel: false
+          });
+          //
+          const idleListener = google.maps.event.addListenerOnce(
+            self.map,
+            'idle',
+            () => {
+              let iframe = document.querySelector('iframe');
+              iframe.setAttribute('aria-hidden', 'true');
+              iframe.setAttribute('tabindex', '-1');
+            }
+          );
 
-        DBHelper.mapMarkerForRestaurant(self.restaurant, self.map);
-      });
+          DBHelper.mapMarkerForRestaurant(self.restaurant, self.map);
+        },
+        true
+      );
     }
     fillBreadcrumb();
   });
