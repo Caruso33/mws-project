@@ -9,6 +9,8 @@ const logging = false;
  * Fetch neighborhoods and cuisines as soon as the page is loaded.
  */
 document.addEventListener('DOMContentLoaded', event => {
+  console.log('a');
+
   serviceWorker();
   fetchNeighborhoods();
   fetchCuisines();
@@ -91,29 +93,44 @@ window.initMap = () => {
   const mapDiv = document.getElementById('map');
   mapDiv.appendChild(image);
 
-  // TODO: FOCUS WITH TAB AND MAKE MAP LOADABLE WITH SPACE / ENTER
-  // TODO: ADDEVENTLISTENER SHOULD ONLY FIRE ONCE??????????????????????????????
+  const loadGMaps = e => {
+    self.map = new google.maps.Map(mapDiv, {
+      zoom: 12,
+      center: loc,
+      scrollwheel: false
+    });
+
+    const idleListener = google.maps.event.addListenerOnce(
+      self.map,
+      'idle',
+      () => {
+        let iframe = document.querySelector('iframe');
+        iframe.setAttribute('aria-hidden', 'true');
+        iframe.setAttribute('tabindex', '-1');
+      }
+    );
+    updateRestaurants();
+    window.removeEventListener('click', loadGMaps, false);
+    window.removeEventListener('keypress', loadGMaps, false);
+  };
+
   mapDiv.addEventListener(
     'click',
     e => {
-      self.map = new google.maps.Map(mapDiv, {
-        zoom: 12,
-        center: loc,
-        scrollwheel: false
-      });
-
-      const idleListener = google.maps.event.addListenerOnce(
-        self.map,
-        'idle',
-        () => {
-          let iframe = document.querySelector('iframe');
-          iframe.setAttribute('aria-hidden', 'true');
-          iframe.setAttribute('tabindex', '-1');
-        }
-      );
-      updateRestaurants();
+      loadGMaps(e);
     },
-    true
+    { once: true }
+  );
+  mapDiv.addEventListener(
+    'keypress',
+    e => {
+      var key = e.which || e.keyCode;
+      if (key === 13) {
+        // 13 is enter
+        loadGMaps(e);
+      }
+    },
+    { once: true }
   );
 
   updateRestaurants();
@@ -179,9 +196,8 @@ const fillRestaurantsHTML = (restaurants = self.restaurants) => {
  */
 const createRestaurantHTML = restaurant => {
   const li = document.createElement('li');
-
   const fav = document.createElement('span');
-  if (restaurant.is_favorite) {
+  if (JSON.parse(restaurant.is_favorite)) {
     fav.innerHTML = `${String.fromCodePoint(0x1f31f)} This is a favorite`;
   }
   li.append(fav);
