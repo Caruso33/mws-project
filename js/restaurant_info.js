@@ -96,72 +96,76 @@ const fillRestaurantHTML = (restaurant = self.restaurant) => {
   const name = document.getElementById('restaurant-name');
   name.innerHTML = restaurant.name;
 
-  const isFavorite = restaurant.is_favorite
-    ? JSON.parse(restaurant.is_favorite)
-    : false;
+  const createFavButton = () => {
+    let isFavorite = restaurant.is_favorite
+      ? JSON.parse(restaurant.is_favorite)
+      : false;
 
-  const favdiv = document.querySelector('#favorite');
-  const favbutton = document.createElement('button');
-  const favp = document.createElement('p');
-  favp.innerHTML = 'click to change favorite state';
-
-  favbutton.innerHTML = isFavorite
-    ? `${String.fromCodePoint(0x1f31f)} This is a favorite`
-    : `${String.fromCodePoint(0x25fb)} No favorite of yours`;
-
-  favbutton.addEventListener('click', async () => {
-    self.restaurant.is_favorite = !isFavorite;
-
-    try {
-      await window.localStorage.setItem(
-        `restaurantJson?id=${restaurant.id}`,
-        JSON.stringify(self.restaurant)
-      );
-      await fetch(
-        `http://localhost:1337/restaurants/${
-          restaurant.id
-        }/?is_favorite=${!isFavorite}`,
-        {
-          method: 'PUT',
-          headers: {
-            Accept: 'application/json'
-          }
-        }
-      );
-    } catch (err) {
-      console.log('You are offline, saving favorite data to storage ');
-
-      window.addEventListener('online', async () => {
-        console.log('You are online, sending favorite data to server');
-
-        try {
-          const restaurantJson = await JSON.parse(
-            window.localStorage.getItem(`restaurantJson?id=${restaurant.id}`)
-          );
-
-          await fetch(
-            `http://localhost:1337/restaurants/${
-              restaurantJson.id
-            }/?is_favorite=${restaurantJson.is_favorite}`,
-            {
-              method: 'PUT',
-              headers: {
-                Accept: 'application/json'
-              }
-            }
-          );
-        } catch (err) {
-          console.error('failed to update favorite to server');
-        }
-      });
-    } finally {
-      favdiv.removeChild(favbutton);
-      favdiv.removeChild(favp);
-      fillRestaurantHTML(self.restaurant);
+    const favdiv = document.querySelector('#favorite');
+    while (favdiv.firstChild) {
+      favdiv.removeChild(favdiv.firstChild);
     }
-  });
-  favdiv.appendChild(favbutton);
-  favdiv.appendChild(favp);
+    const favbutton = document.createElement('button');
+    const favp = document.createElement('p');
+    favp.innerHTML = 'click to change favorite state';
+
+    favbutton.innerHTML = isFavorite
+      ? `${String.fromCodePoint(0x1f31f)} This is a favorite`
+      : `${String.fromCodePoint(0x25fb)} No favorite of yours`;
+
+    favbutton.addEventListener('click', async () => {
+      restaurant.is_favorite = !isFavorite;
+      try {
+        await window.localStorage.setItem(
+          `restaurantJson?id=${restaurant.id}`,
+          JSON.stringify(self.restaurant)
+        );
+        await fetch(
+          `http://localhost:1337/restaurants/${
+            restaurant.id
+          }/?is_favorite=${!isFavorite}`,
+          {
+            method: 'PUT',
+            headers: {
+              Accept: 'application/json'
+            }
+          }
+        );
+      } catch (err) {
+        console.log('You are offline, saving favorite data to storage', err);
+
+        window.addEventListener('online', async () => {
+          console.log('You are online, sending favorite data to server');
+
+          try {
+            const restaurantJson = await JSON.parse(
+              window.localStorage.getItem(`restaurantJson?id=${restaurant.id}`)
+            );
+
+            await fetch(
+              `http://localhost:1337/restaurants/${
+                restaurantJson.id
+              }/?is_favorite=${restaurantJson.is_favorite}`,
+              {
+                method: 'PUT',
+                headers: {
+                  Accept: 'application/json'
+                }
+              }
+            );
+          } catch (err) {
+            console.error('failed to update favorite to server');
+          }
+        });
+      } finally {
+        createFavButton();
+      }
+    });
+    favdiv.appendChild(favbutton);
+    favdiv.appendChild(favp);
+  };
+
+  createFavButton();
 
   const address = document.getElementById('restaurant-address');
   address.innerHTML = restaurant.address;
