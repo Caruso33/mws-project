@@ -96,7 +96,9 @@ const fillRestaurantHTML = (restaurant = self.restaurant) => {
   const name = document.getElementById('restaurant-name');
   name.innerHTML = restaurant.name;
 
-  const isFavorite = JSON.parse(restaurant.is_favorite);
+  const isFavorite = restaurant.is_favorite
+    ? JSON.parse(restaurant.is_favorite)
+    : false;
 
   const favdiv = document.querySelector('#favorite');
   const favbutton = document.createElement('button');
