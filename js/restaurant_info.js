@@ -102,7 +102,6 @@ const fillRestaurantHTML = (restaurant = self.restaurant) => {
   const favp = document.createElement('p');
   favp.innerHTML = 'click to change favorite state';
 
-  console.log('fav', typeof isFavorite, isFavorite);
   favbutton.innerHTML = isFavorite
     ? `${String.fromCodePoint(0x1f31f)} This is a favorite`
     : `${String.fromCodePoint(0x25fb)} No favorite of yours`;
@@ -132,9 +131,9 @@ const fillRestaurantHTML = (restaurant = self.restaurant) => {
       favdiv.removeChild(favp);
       fillRestaurantHTML(self.restaurant);
     } catch (err) {
-      console.log('You are offline, saving data to storage ', err);
+      console.log('You are offline, saving favorite data to storage ');
 
-      window.localStorage.setItem(
+      await window.localStorage.setItem(
         `favoriteJson?id=${restaurant.id}`,
         JSON.stringify({
           id: restaurant.id,
@@ -142,26 +141,36 @@ const fillRestaurantHTML = (restaurant = self.restaurant) => {
         })
       );
 
-      window.addEventListener('online', () => {
-        console.log('You are online sending data to server');
+      window.addEventListener('online', async () => {
+        console.log('You are online, sending favorite data to server');
 
-        window.localStorage.getItem(
-          `favoriteJson?id=${restaurant.id}`,
-          (err, { id, favorite }) => {
-            if (err) {
-              console.error('error getting the stored data back ', err);
-            }
-            fetch(
-              `http://localhost:1337/restaurants/${id}/?is_favorite=${!favorite}`,
-              {
-                method: 'PUT',
-                headers: {
-                  Accept: 'application/json'
-                }
+        try {
+          await window.localStorage.getItem(
+            `favoriteJson?id=${restaurant.id}`,
+            (err,
+            async () => {
+              if (err) {
+                console.error('error getting stored favorite back ', err);
               }
-            );
-          }
-        );
+              await fetch(
+                `http://localhost:1337/restaurants/${id}/?is_favorite=${!isFavorite}`,
+                {
+                  method: 'PUT',
+                  headers: {
+                    Accept: 'application/json'
+                  }
+                }
+              );
+            })
+          );
+          await window.localStorage.removeItem(
+            `favoriteJson?id=${restaurant.id}`
+          );
+
+          fillRestaurantHTML(self.restaurant);
+        } catch (err) {
+          console.error('failed to send favorite to server');
+        }
       });
     }
   });
@@ -195,7 +204,7 @@ const fillRestaurantHTML = (restaurant = self.restaurant) => {
     fillRestaurantHoursHTML();
   }
   // fill reviews
-  fillReviewsHTML();
+  fillReviewsHTML(restaurant.id);
 };
 
 /**
@@ -223,7 +232,7 @@ const fillRestaurantHoursHTML = (
 /**
  * Create all reviews HTML and add them to the webpage.
  */
-const fillReviewsHTML = (reviews = self.reviews) => {
+const fillReviewsHTML = (id, reviews = self.reviews) => {
   const container = document.getElementById('reviews-container');
   if (container.childNodes.length < 4) {
     const title = document.createElement('h2');
@@ -245,7 +254,7 @@ const fillReviewsHTML = (reviews = self.reviews) => {
   form.setAttribute('method', 'post');
   form.setAttribute('action', 'http://localhost:1337/reviews');
 
-  form.onsubmit = e => {
+  form.onsubmit = async e => {
     e.preventDefault();
 
     const newReviewRequest = {};
@@ -253,15 +262,50 @@ const fillReviewsHTML = (reviews = self.reviews) => {
       newReviewRequest[e.target[i].name] = e.target[i].value;
     }
 
-    fetch('http://localhost:1337/reviews', {
-      method: 'POST',
-      newReviewRequest
-    });
-
     ul.insertBefore(
       createReviewHTML(newReviewRequest),
       ul.childNodes[ul.childNodes.length - 1]
     );
+
+    try {
+      await fetch('http://localhost:1337/reviews', {
+        method: 'POST',
+        newReviewRequest
+      });
+    } catch (err) {
+      console.log('You are offline, saving review to storage ');
+
+      await window.localStorage.setItem(
+        `reviewJson?id=${id}`,
+        JSON.stringify({
+          id: id,
+          review: JSON.stringify(newReviewRequest)
+        })
+      );
+
+      window.addEventListener('online', async () => {
+        console.log('You are online, sending review to server');
+
+        try {
+          await window.localStorage.getItem(
+            `reviewJson?id=${id}`,
+            (err,
+            async newReviewRequest => {
+              if (err) {
+                console.error('error getting stored review back ', err);
+              }
+              await fetch('http://localhost:1337/reviews', {
+                method: 'POST',
+                newReviewRequest
+              });
+            })
+          );
+          await window.localStorage.removeItem(`reviewJson?id=${id}`);
+        } catch (err) {
+          console.error('failed to send review to server');
+        }
+      });
+    }
   };
 
   form.classList.add('newReview');
