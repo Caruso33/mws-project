@@ -10,10 +10,8 @@ Using following server on port 1337
 ### Remarks on implementation
 
 - Lazy-loading for images
-- webp images (except google maps)
-- separating critcal css in style tags
+- webp images
 - minifying of css and js-files
-- using localforage for indexedDB
 - skip link for google maps
 - google maps splash screen in webp
 - offline storage
