@@ -74,6 +74,14 @@ self.addEventListener('fetch', event => {
                 }
               }
               return caches.open(dataCacheName).then(cache => {
+                // restaurant requests are stored in localStorage
+                if (
+                  event.request.url.startsWith(
+                    'http://localhost:1337/restaurants'
+                  )
+                ) {
+                  return response;
+                }
                 cache.put(event.request.url, response.clone());
                 if (logging) {
                   console.log(

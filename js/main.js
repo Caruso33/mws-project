@@ -18,19 +18,13 @@ document.addEventListener('DOMContentLoaded', event => {
  * Fetch all neighborhoods and set their HTML.
  */
 const fetchNeighborhoods = () => {
-  window.localStorage.getItem('restaurantData', (err, restaurantList) => {
-    if (restaurantList) {
-      self.restaurantList = restaurantList;
+  DBHelper.fetchNeighborhoods((error, neighborhoods) => {
+    if (error) {
+      // Got an error
+      console.error(error);
     } else {
-      DBHelper.fetchNeighborhoods((error, neighborhoods) => {
-        if (error) {
-          // Got an error
-          console.error(error);
-        } else {
-          self.neighborhoods = neighborhoods;
-          fillNeighborhoodsHTML();
-        }
-      });
+      self.neighborhoods = neighborhoods;
+      fillNeighborhoodsHTML();
     }
   });
 };
@@ -90,6 +84,7 @@ window.initMap = () => {
   const rootImgSrc = '/img/webp/maps-';
   image.src = `${rootImgSrc}500.webp`;
   image.srcset = `${rootImgSrc}360.webp 360w, ${rootImgSrc}500.webp 500w, ${rootImgSrc}700.webp 700w, ${rootImgSrc}900.webp 900w, ${rootImgSrc}1200.webp 1200w, ${rootImgSrc}1600.webp 1600w`;
+  image.sizes = '100vw';
   image.alt = `Google Maps Preview`;
   image.setAttribute('tabindex', '0');
 

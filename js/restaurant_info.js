@@ -69,31 +69,30 @@ const fetchRestaurantFromURL = async callback => {
   } else {
     await DBHelper.fetchRestaurantById(id, (error, restaurant) => {
       self.restaurant = restaurant;
+      console.log('restaurant', self.restaurant);
       if (!restaurant) {
         console.error(error);
         return;
       }
       callback(null, restaurant);
     });
-    await DBHelper.fetchRestaurantReviewsById(
-      self.restaurant.id,
-      (error, reviews) => {
-        if (!reviews) {
-          console.error(error);
-          return;
-        }
-        self.reviews = reviews;
+    await DBHelper.fetchRestaurantReviewsById(id, (error, reviews) => {
+      if (!reviews) {
+        console.error(error);
+        return;
       }
-    );
-    fillRestaurantHTML();
+      self.reviews = reviews;
+    });
   }
+  fillRestaurantHTML(self.restaurant);
 };
 
 /**
  * Create restaurant HTML and add it to the webpage
  */
-const fillRestaurantHTML = (restaurant = self.restaurant) => {
+const fillRestaurantHTML = restaurant => {
   const name = document.getElementById('restaurant-name');
+  console.log(restaurant);
   name.innerHTML = restaurant.name;
 
   const createFavButton = () => {
