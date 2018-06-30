@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', event => {
  * Fetch all neighborhoods and set their HTML.
  */
 const fetchNeighborhoods = () => {
-  window.localStorage.getItem('restaurantData', function (err, restaurantList) {
+  window.localStorage.getItem('restaurantData', (err, restaurantList) => {
     if (restaurantList) {
       self.restaurantList = restaurantList;
     } else {

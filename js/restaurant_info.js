@@ -95,43 +95,50 @@ const fetchRestaurantFromURL = async callback => {
 const fillRestaurantHTML = (restaurant = self.restaurant) => {
   const name = document.getElementById('restaurant-name');
   name.innerHTML = restaurant.name;
-
-  console.log(self.restaurant.is_favorite);
+  const isFavorite = JSON.parse(restaurant.is_favorite);
 
   const favdiv = document.querySelector('#favorite');
   const favbutton = document.createElement('button');
   const favp = document.createElement('p');
   favp.innerHTML = 'click to change favorite state';
 
-  favbutton.innerHTML = self.restaurant.is_favorite
+  console.log('fav', typeof isFavorite, isFavorite);
+  favbutton.innerHTML = isFavorite
     ? `${String.fromCodePoint(0x1f31f)} This is a favorite`
     : `${String.fromCodePoint(0x25fb)} No favorite of yours`;
 
   favbutton.addEventListener('click', async () => {
     try {
-      await fetch(
-        `http://localhost:1337/restaurants/${
-          restaurant.id
-        }/?is_favorite=${!restaurant.is_favorite}`,
-        {
-          method: 'PUT',
-          headers: {
-            Accept: 'application/json'
+      self.restaurant.is_favorite = JSON.stringify(!isFavorite);
+      await Promise.all([
+        fetch(
+          `http://localhost:1337/restaurants/${
+            restaurant.id
+          }/?is_favorite=${!isFavorite}`,
+          {
+            method: 'PUT',
+            headers: {
+              Accept: 'application/json'
+            }
           }
-        }
-      );
-      self.restaurant.is_favorite = !restaurant.is_favorite;
+        ),
+        window.localStorage.setItem(
+          `restaurantJson?id=${restaurant.id}`,
+          JSON.stringify(self.restaurant)
+        )
+      ]);
+
       favdiv.removeChild(favbutton);
       favdiv.removeChild(favp);
       fillRestaurantHTML(self.restaurant);
     } catch (err) {
-      console.error('You are offline, saving data to storage ', err);
+      console.log('You are offline, saving data to storage ', err);
 
       window.localStorage.setItem(
         `favoriteJson?id=${restaurant.id}`,
         JSON.stringify({
           id: restaurant.id,
-          favorite: restaurant.is_favorite
+          favorite: JSON.stringify(!isFavorite)
         })
       );
 
