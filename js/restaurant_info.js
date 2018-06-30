@@ -21,30 +21,44 @@ window.initMap = () => {
       // Got an error!
       console.error(error);
     } else {
-      // TODO: FOCUS WITH TAB AND MAKE MAP LOADABLE WITH SPACE / ENTER
-      // TODO: ADDEVENTLISTENER SHOULD ONLY FIRE ONCE??????????????????????????????
+      const loadGMaps = e => {
+        self.map = new google.maps.Map(mapDiv, {
+          zoom: 16,
+          center: restaurant.latlng,
+          scrollwheel: false
+        });
+
+        const idleListener = google.maps.event.addListenerOnce(
+          self.map,
+          'idle',
+          () => {
+            let iframe = document.querySelector('iframe');
+            iframe.setAttribute('aria-hidden', 'true');
+            iframe.setAttribute('tabindex', '-1');
+          }
+        );
+        DBHelper.mapMarkerForRestaurant(self.restaurant, self.map);
+        window.removeEventListener('click', loadGMaps, false);
+        window.removeEventListener('keypress', loadGMaps, false);
+      };
+
       mapDiv.addEventListener(
         'click',
         e => {
-          self.map = new google.maps.Map(mapDiv, {
-            zoom: 16,
-            center: restaurant.latlng,
-            scrollwheel: false
-          });
-          //
-          const idleListener = google.maps.event.addListenerOnce(
-            self.map,
-            'idle',
-            () => {
-              let iframe = document.querySelector('iframe');
-              iframe.setAttribute('aria-hidden', 'true');
-              iframe.setAttribute('tabindex', '-1');
-            }
-          );
-
-          DBHelper.mapMarkerForRestaurant(self.restaurant, self.map);
+          loadGMaps(e);
         },
-        true
+        { once: true }
+      );
+      mapDiv.addEventListener(
+        'keypress',
+        e => {
+          var key = e.which || e.keyCode;
+          if (key === 13) {
+            // 13 is enter
+            loadGMaps(e);
+          }
+        },
+        { once: true }
       );
     }
     fillBreadcrumb();
